@@ -4,16 +4,18 @@ on:
   push:
     branches:
       - develop
-      - feat/*
   pull_request:
     branches:
       - develop
-      - feat/*
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./src/XmlDocFinder
 
     steps:
     - uses: actions/checkout@v2

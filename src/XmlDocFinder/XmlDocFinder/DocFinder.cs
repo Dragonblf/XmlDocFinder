@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
@@ -14,6 +15,13 @@ namespace Dragonblf.XmlDocFinder
     /// </summary>
     public class DocFinder : IDocFinder
     {
+        /// <summary>
+        /// Contains previously found XML documentation
+        /// paths for hashes of assembly full names.
+        /// </summary>
+        private static readonly IDictionary<int, string> Cache =
+            new ConcurrentDictionary<int, string>();
+
         /// <summary>
         /// Contains the file system wrapper to use.
         /// </summary>
@@ -57,6 +65,15 @@ namespace Dragonblf.XmlDocFinder
         public bool TryFindFor(in Assembly assembly, out string path)
         {
             if (assembly == null) { throw new ArgumentNullException(nameof(assembly)); }
+            if (string.IsNullOrWhiteSpace(assembly.FullName))
+            {
+                throw new ArgumentException("Full name of assembly needs to be defined and not only white spaces", nameof(assembly));
+            }
+
+            // Check if cache contains previously found
+            // path for given assembly
+            var hash = assembly.FullName.GetHashCode();
+            if (Cache.TryGetValue(hash, out path)) { return true; }
 
             throw new NotImplementedException();
         }

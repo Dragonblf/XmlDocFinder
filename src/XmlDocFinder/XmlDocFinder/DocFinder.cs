@@ -49,7 +49,9 @@ namespace Dragonblf.XmlDocFinder
         {
             if (assembly == null) { throw new ArgumentNullException(nameof(assembly)); }
 
-            throw new NotImplementedException();
+            return TryFindFor(assembly, out var path) 
+                ? path 
+                : string.Empty;
         }
 
         public bool TryFindFor(in Assembly assembly, out string path)

@@ -75,6 +75,27 @@ namespace Dragonblf.XmlDocFinder
             var hash = assembly.FullName.GetHashCode();
             if (Cache.TryGetValue(hash, out path)) { return true; }
 
+            // Get path for assembly or string.Empty if
+            // no XML documentation could be found for
+            // given assembly.
+            path = FindPath(assembly);
+
+            // Save path into cache
+            Cache[hash] = path;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Returns XML documentation path for <paramref name="assembly"/>
+        /// or <see cref="string.Empty"/> if no path could be found.
+        /// </summary>
+        /// <param name="assembly">Assembly for which to get XML documentation path</param>
+        /// <returns>Path to XML documentation path for <paramref name="assembly"/> or <see cref="string.Empty"/> if no path could be found</returns>
+        private string FindPath(in Assembly assembly)
+        {
+            if (assembly == null) { throw new ArgumentNullException(nameof(assembly)); }
+
             throw new NotImplementedException();
         }
     }

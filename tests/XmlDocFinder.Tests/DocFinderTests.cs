@@ -33,22 +33,30 @@ namespace XmlDocFinder.Tests
         }
 
         [Fact]
-        public void Call_FindForT_WithType_NotImplementedException()
+        public void Call_FindForT_WithType_EmptyString()
         {
-            Should.Throw<NotImplementedException>(() => _testClass.FindFor<object>());
+            var path = _testClass.FindFor<object>();
+
+            path.ShouldBe(string.Empty);
         }
 
         [Fact]
-        public void Call_TryFindForT_WithType_NotImplementedException()
+        public void Call_TryFindForT_WithType_EmptyString()
         {
-            Should.Throw<NotImplementedException>(() => _testClass.TryFindFor<object>(out var path));
+            var result = _testClass.TryFindFor<object>(out var path);
+
+            result.ShouldBeTrue();
+            path.ShouldBe(string.Empty);
         }
 
         [Fact]
-        public void Call_FindFor_WithAssembly_NotImplementedException()
+        public void Call_FindFor_WithAssembly_EmptyString()
         {
             A.CallTo(() => _assembly.FullName).Returns("path");
-            Should.Throw<NotImplementedException>(() => _testClass.FindFor(_assembly));
+
+            var path = _testClass.FindFor(_assembly);
+
+            path.ShouldBe(string.Empty);
         }
 
         [Fact]
@@ -59,10 +67,14 @@ namespace XmlDocFinder.Tests
         }
 
         [Fact]
-        public void Call_TryFindFor_WithAssembly_NotImplementedException()
+        public void Call_TryFindFor_WithAssembly_EmptyString()
         {
             A.CallTo(() => _assembly.FullName).Returns("path");
-            Should.Throw<NotImplementedException>(() => _testClass.TryFindFor(_assembly, out var path));
+
+            var result = _testClass.TryFindFor(_assembly, out var path);
+
+            result.ShouldBeTrue();
+            path.ShouldBe(string.Empty);
         }
 
         [Fact]

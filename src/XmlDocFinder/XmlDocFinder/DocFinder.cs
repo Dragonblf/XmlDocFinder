@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection;
@@ -94,7 +95,7 @@ namespace Dragonblf.XmlDocFinder
         /// <returns>Path to XML documentation path for <paramref name="assembly"/> or <see cref="string.Empty"/> if no path could be found</returns>
         private string FindPath(in Assembly assembly)
         {
-            if (assembly == null) { throw new ArgumentNullException(nameof(assembly)); }
+            Debug.Assert(assembly != null, "assembly != null");
 
             throw new NotImplementedException();
         }

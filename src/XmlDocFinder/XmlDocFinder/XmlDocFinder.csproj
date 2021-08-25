@@ -5,4 +5,8 @@
     <RootNamespace>Dragonblf.XmlDocFinder</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="SimpleInjector" Version="5.3.2" />
+  </ItemGroup>
+
 </Project>

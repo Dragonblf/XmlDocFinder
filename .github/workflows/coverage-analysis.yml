@@ -2,9 +2,13 @@ name: Build & Test
 
 on:
   push:
-    branches: [ develop ]
+    branches:
+      - develop
+      - feat/*
   pull_request:
-    branches: [ develop ]
+    branches:
+      - develop
+      - feat/*
 
 jobs:
   build:

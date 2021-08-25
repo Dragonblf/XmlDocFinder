@@ -47,6 +47,7 @@ namespace XmlDocFinder.Tests
         [Fact]
         public void Call_FindFor_WithAssembly_NotImplementedException()
         {
+            A.CallTo(() => _assembly.FullName).Returns("path");
             Should.Throw<NotImplementedException>(() => _testClass.FindFor(_assembly));
         }
 
@@ -60,6 +61,7 @@ namespace XmlDocFinder.Tests
         [Fact]
         public void Call_TryFindFor_WithAssembly_NotImplementedException()
         {
+            A.CallTo(() => _assembly.FullName).Returns("path");
             Should.Throw<NotImplementedException>(() => _testClass.TryFindFor(_assembly, out var path));
         }
 
@@ -68,6 +70,16 @@ namespace XmlDocFinder.Tests
         {
             Assembly assembly = null;
             Should.Throw<ArgumentNullException>(() => _testClass.TryFindFor(assembly, out var path));
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void Call_TryFindFor_WithWrongFullName_ArgumentException(string value)
+        {
+            A.CallTo(() => _assembly.FullName).Returns(value);
+            Should.Throw<ArgumentException>(() => _testClass.TryFindFor(_assembly, out var path));
         }
     }
 }

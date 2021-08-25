@@ -49,7 +49,7 @@ namespace Dragonblf.XmlDocFinder
             _fileSystem = fileSystem;
         }
 
-
+        
         public string FindFor<T>() where T : notnull => FindFor(typeof(T).Assembly);
 
         public bool TryFindFor<T>(out string path) where T : notnull => TryFindFor(typeof(T).Assembly, out path);
@@ -97,7 +97,81 @@ namespace Dragonblf.XmlDocFinder
         {
             Debug.Assert(assembly != null, "assembly != null");
 
+            // Tries to get xml documentation file path from
+            // assembly location
+            if (TryGetPathFromAssemblyLocation(assembly, out var path))
+            {
+                return path;
+            }
+
+            // Tries to get xml documentation file path from
+            // assembly codebase
+            if (TryGetPathFromAssemblyCodebase(assembly, out path))
+            {
+                return path;
+            }
+
             return string.Empty;
+        }
+
+        /// <summary>
+        /// Tries to get xml documentation file path from
+        /// <paramref name="assembly"/> location.
+        /// </summary>
+        /// <param name="assembly">Assembly for whom to get xml documentation file path</param>
+        /// <param name="value">Found path or null if no path was found</param>
+        /// <returns>Whether a path was found or not</returns>
+        private bool TryGetPathFromAssemblyLocation(in Assembly assembly, out string value)
+        {
+            Debug.Assert(assembly != null, "assembly != null");
+
+            value = string.Empty;
+
+            // Skip search if no location is given
+            if (string.IsNullOrWhiteSpace(assembly.Location)) { return false; }
+
+            // Create possible xml documentation file path
+            var directory = _fileSystem.Path.GetDirectoryName(assembly.Location);
+            var path = _fileSystem.Path.Combine(directory, $"{assembly.GetName().Name}.xml");
+
+            if (_fileSystem.File.Exists(path))
+            {
+                value = path;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Tries to get xml documentation file path from
+        /// <paramref name="assembly"/> codebase.
+        /// </summary>
+        /// <param name="assembly">Assembly for whom to get xml documentation file path</param>
+        /// <param name="value">Found path or null if no path was found</param>
+        /// <returns>Whether a path was found or not</returns>
+        private bool TryGetPathFromAssemblyCodebase(in Assembly assembly, out string value)
+        {
+            Debug.Assert(assembly != null, "assembly != null");
+
+            value = string.Empty;
+
+            // Skip search if no location is given
+            if (string.IsNullOrWhiteSpace(assembly.CodeBase)) { return false; }
+
+            // Create possible xml documentation path
+            var directory = _fileSystem.Path.GetDirectoryName(assembly.CodeBase)
+                .Replace("file:///", string.Empty)
+                .Replace("file:\\", string.Empty);
+            var path = _fileSystem.Path.Combine(directory, $"{assembly.GetName().Name}.xml");
+
+            if (_fileSystem.File.Exists(path))
+            {
+                value = path;
+                return true;
+            }
+
+            return false;
         }
     }
 }

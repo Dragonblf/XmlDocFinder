@@ -97,7 +97,7 @@ namespace Dragonblf.XmlDocFinder
         {
             Debug.Assert(assembly != null, "assembly != null");
 
-            throw new NotImplementedException();
+            return string.Empty;
         }
     }
 }

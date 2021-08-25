@@ -3,7 +3,7 @@ using System;
 using System.IO.Abstractions;
 using Xunit;
 using System.Reflection;
-using FakeItEasy;
+using NSubstitute;
 using Shouldly;
 
 namespace XmlDocFinder.Tests
@@ -19,9 +19,11 @@ namespace XmlDocFinder.Tests
 
         public DocFinderTests()
         {
-            _fileSystem = A.Fake<IFileSystem>();
+            _assembly = Substitute.For<Assembly>();
+            _fileSystem = Substitute.For<IFileSystem>();
             _testClass = new DocFinder(_fileSystem);
-            _assembly = A.Fake<Assembly>();
+
+            _assembly.FullName.Returns(Guid.NewGuid().ToString());
         }
 
 
@@ -52,10 +54,7 @@ namespace XmlDocFinder.Tests
         [Fact]
         public void Call_FindFor_WithAssembly_EmptyString()
         {
-            A.CallTo(() => _assembly.FullName).Returns("path");
-
             var path = _testClass.FindFor(_assembly);
-
             path.ShouldBe(string.Empty);
         }
 
@@ -64,17 +63,6 @@ namespace XmlDocFinder.Tests
         {
             Assembly assembly = null;
             Should.Throw<ArgumentNullException>(() => _testClass.FindFor(assembly));
-        }
-
-        [Fact]
-        public void Call_TryFindFor_WithAssembly_EmptyString()
-        {
-            A.CallTo(() => _assembly.FullName).Returns("path");
-
-            var result = _testClass.TryFindFor(_assembly, out var path);
-
-            result.ShouldBeTrue();
-            path.ShouldBe(string.Empty);
         }
 
         [Fact]
@@ -90,8 +78,91 @@ namespace XmlDocFinder.Tests
         [InlineData("   ")]
         public void Call_TryFindFor_WithWrongFullName_ArgumentException(string value)
         {
-            A.CallTo(() => _assembly.FullName).Returns(value);
+            _assembly.FullName.Returns(value);
             Should.Throw<ArgumentException>(() => _testClass.TryFindFor(_assembly, out var path));
+        }
+
+        [Fact]
+        public void Call_TryFindFor_WithAssemblyLocation_Works()
+        {
+            var assemblyName = new AssemblyName { Name = "file" };
+            var baseDirectory = "path/to";
+            var pathToFileWithoutExtension = $"{baseDirectory}/file";
+            var dllFilePath = $"{pathToFileWithoutExtension}.dll";
+            var xmlFilePath = $"{pathToFileWithoutExtension}.xml";
+
+            _assembly.Location.Returns(dllFilePath);
+            _assembly.GetName().Returns(assemblyName);
+            _fileSystem.Path.GetDirectoryName(dllFilePath).Returns(baseDirectory);
+            _fileSystem.Path.Combine(baseDirectory, $"{assemblyName.Name}.xml").Returns(xmlFilePath);
+            _fileSystem.File.Exists(xmlFilePath).Returns(true);
+
+            var result = _testClass.TryFindFor(_assembly, out var path);
+            result.ShouldBeTrue();
+            path.ShouldBe(xmlFilePath);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void Call_TryFindFor_WithAssemblyCodebase1_Works(string assemblyLocation)
+        {
+            var assemblyName = new AssemblyName { Name = "file" };
+            var baseDirectory = "path/to";
+            var pathToFileWithoutExtension = $"{baseDirectory}/file";
+            var dllFilePath = $"{pathToFileWithoutExtension}.dll";
+            var xmlFilePath = $"{pathToFileWithoutExtension}.xml";
+            var dllFileCodebasePath = $"file:///c/{pathToFileWithoutExtension}.dll";
+            var xmlFileCodebasePath = $"c/{pathToFileWithoutExtension}.xml";
+
+            // No location
+            _assembly.Location.Returns(assemblyLocation);
+            _assembly.GetName().Returns(assemblyName);
+            _fileSystem.Path.GetDirectoryName(dllFilePath).Returns(baseDirectory);
+            _fileSystem.Path.Combine(baseDirectory, $"{assemblyName.Name}.xml").Returns(xmlFilePath);
+            _fileSystem.File.Exists(xmlFilePath).Returns(true);
+
+            _assembly.CodeBase.Returns(dllFileCodebasePath);
+            _fileSystem.Path.GetDirectoryName(dllFileCodebasePath)
+                .Returns($"file:///c/{baseDirectory}");
+            _fileSystem.Path.Combine($"c/{baseDirectory}", $"{assemblyName.Name}.xml")
+                .Returns(xmlFileCodebasePath);
+            _fileSystem.File.Exists(xmlFileCodebasePath).Returns(true);
+
+            var result = _testClass.TryFindFor(_assembly, out var path);
+            result.ShouldBeTrue();
+            path.ShouldBe(xmlFileCodebasePath);
+        }
+
+        [Fact]
+        public void Call_TryFindFor_WithAssemblyCodebase2_Works()
+        {
+            var assemblyName = new AssemblyName { Name = "file" };
+            var baseDirectory = "path/to";
+            var pathToFileWithoutExtension = $"{baseDirectory}/file";
+            var dllFilePath = $"{pathToFileWithoutExtension}.dll";
+            var xmlFilePath = $"{pathToFileWithoutExtension}.xml";
+            var dllFileCodebasePath = $"file:///c/{pathToFileWithoutExtension}.dll";
+            var xmlFileCodebasePath = $"c/{pathToFileWithoutExtension}.xml";
+
+            // No location
+            _assembly.Location.Returns(dllFilePath);
+            _assembly.GetName().Returns(assemblyName);
+            _fileSystem.Path.GetDirectoryName(dllFilePath).Returns(baseDirectory);
+            _fileSystem.Path.Combine(baseDirectory, $"{assemblyName.Name}.xml").Returns(xmlFilePath);
+            _fileSystem.File.Exists(xmlFilePath).Returns(false);
+
+            _assembly.CodeBase.Returns(dllFileCodebasePath);
+            _fileSystem.Path.GetDirectoryName(dllFileCodebasePath)
+                .Returns($"file:///c/{baseDirectory}");
+            _fileSystem.Path.Combine($"c/{baseDirectory}", $"{assemblyName.Name}.xml")
+                .Returns(xmlFileCodebasePath);
+            _fileSystem.File.Exists(xmlFileCodebasePath).Returns(true);
+
+            var result = _testClass.TryFindFor(_assembly, out var path);
+            result.ShouldBeTrue();
+            path.ShouldBe(xmlFileCodebasePath);
         }
     }
 }

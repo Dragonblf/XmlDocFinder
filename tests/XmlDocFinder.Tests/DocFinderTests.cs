@@ -1,5 +1,6 @@
 using Dragonblf.XmlDocFinder;
 using System;
+using System.IO.Abstractions;
 using Xunit;
 using System.Reflection;
 using FakeItEasy;
@@ -13,10 +14,13 @@ namespace XmlDocFinder.Tests
 
         private Assembly _assembly;
 
+        private IFileSystem _fileSystem;
+
 
         public DocFinderTests()
         {
-            _testClass = new DocFinder();
+            _fileSystem = A.Fake<IFileSystem>();
+            _testClass = new DocFinder(_fileSystem);
             _assembly = A.Fake<Assembly>();
         }
 

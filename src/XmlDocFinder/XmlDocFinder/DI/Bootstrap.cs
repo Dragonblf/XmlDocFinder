@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace Dragonblf.XmlDocFinder.DI
         /// <returns>Dependency injection container</returns>
         internal static Container Initialize(this Container container)
         {
+            container.Register<IFileSystem, FileSystem>(Lifestyle.Singleton);
             return container;
         }
     }

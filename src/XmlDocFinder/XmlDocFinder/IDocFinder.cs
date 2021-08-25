@@ -19,7 +19,7 @@ namespace Dragonblf.XmlDocFinder
         /// </summary>
         /// <typeparam name="T">Type for which declaring assembly to find the XML documentation file path</typeparam>
         /// <returns>Path to XML documentation file if path was found else <see cref="string.Empty"/></returns>
-        public string FindFor<T>() where T : new();
+        public string FindFor<T>() where T : notnull;
 
         /// <summary>
         /// Finds XML documentation file path for assembly declaring
@@ -28,7 +28,7 @@ namespace Dragonblf.XmlDocFinder
         /// <typeparam name="T">Type for which declaring assembly to find the XML documentation file path</typeparam>
         /// <param name="path">Path to XML documentation file if path was found else <see cref="string.Empty"/></param>
         /// <returns>True if path to XML documentation file was found otherwise false</returns>
-        public bool TryFindFor<T>(out string path) where T : new();
+        public bool TryFindFor<T>(out string path) where T : notnull;
 
         /// <summary>
         /// Finds XML documentation file path for <paramref name="assembly"/>.

@@ -12,9 +12,9 @@ namespace Dragonblf.XmlDocFinder
     /// </summary>
     public class DocFinder : IDocFinder
     {
-        public string FindFor<T>() where T : new() => FindFor(typeof(T).Assembly);
+        public string FindFor<T>() where T : notnull => FindFor(typeof(T).Assembly);
 
-        public bool TryFindFor<T>(out string path) where T : new() => TryFindFor(typeof(T).Assembly, out path);
+        public bool TryFindFor<T>(out string path) where T : notnull => TryFindFor(typeof(T).Assembly, out path);
 
         public string FindFor(in Assembly assembly)
         {

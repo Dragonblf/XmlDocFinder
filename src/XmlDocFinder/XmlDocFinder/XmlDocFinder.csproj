@@ -3,7 +3,7 @@
   <PropertyGroup>
 	<TargetFramework>netcoreapp3.1</TargetFramework>
 	<OutputType>Library</OutputType>
-	<PackageId>Dragonblf.XmlDocFinder</PackageId>
+	<PackageId>XmlDocFinder</PackageId>
 	<Authors>Dragonblf</Authors>
 	<Company>Dragonblf</Company>
 	<Description>XmlDocFinder offers a  helper class with methods to locate compiler-generated XML documentation file paths for assemblies with various techniques.</Description>

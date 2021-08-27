@@ -1,6 +1,6 @@
 ﻿using System.IO.Abstractions;
 using SimpleInjector;
-using XmlDocFinder.Entities;
+using XmlDocFinder.Provider;
 
 namespace XmlDocFinder.DI
 {

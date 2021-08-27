@@ -34,27 +34,27 @@ namespace XmlDocFinder.Tests
         }
 
         [Fact]
-        public void Call_FindForT_WithType_EmptyString()
+        public void Call_FindForT_WithType_NoException()
         {
-            var path = _testClass.FindFor<object>();
-
-            path.ShouldBe(string.Empty);
+            Should.NotThrow(() => _testClass.FindFor<object>());
         }
 
         [Fact]
-        public void Call_TryFindForT_WithType_EmptyString()
+        public void Call_TryFindForT_WithType_NoException()
         {
-            var result = _testClass.TryFindFor<object>(out var path);
-
-            result.ShouldBeTrue();
-            path.ShouldBe(string.Empty);
+            Should.NotThrow(() => _testClass.TryFindFor<object>(out var path));
         }
 
         [Fact]
-        public void Call_FindFor_WithAssembly_EmptyString()
+        public void Call_FindFor_WithAssembly_NoException()
         {
-            var path = _testClass.FindFor(_assembly);
-            path.ShouldBe(string.Empty);
+            Should.NotThrow(() => _testClass.FindFor(typeof(object).Assembly));
+        }
+
+        [Fact]
+        public void Call_TryFindFor_WithAssembly_NoException()
+        {
+            Should.NotThrow(() => _testClass.TryFindFor(typeof(object).Assembly, out var path));
         }
 
         [Fact]

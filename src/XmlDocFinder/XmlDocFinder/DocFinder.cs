@@ -7,7 +7,7 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection;
 using XmlDocFinder.DI;
-using XmlDocFinder.Entities;
+using XmlDocFinder.Provider;
 
 namespace XmlDocFinder
 {

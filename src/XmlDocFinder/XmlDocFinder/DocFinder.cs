@@ -23,7 +23,7 @@ namespace XmlDocFinder
         /// <summary>
         /// Contains the file system wrapper to use.
         /// </summary>
-        private IFileSystem _fileSystem;
+        private readonly IFileSystem _fileSystem;
 
 
         /// <summary>

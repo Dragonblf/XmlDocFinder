@@ -9,11 +9,11 @@ namespace XmlDocFinder.Tests
 {
     public class DocFinderTests
     {
-        private DocFinder _testClass;
+        private readonly DocFinder _testClass;
 
-        private Assembly _assembly;
+        private readonly Assembly _assembly;
 
-        private IFileSystem _fileSystem;
+        private readonly IFileSystem _fileSystem;
 
 
         public DocFinderTests()

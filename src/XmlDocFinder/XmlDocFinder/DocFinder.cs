@@ -1,9 +1,13 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using XmlDocFinder.DI;
 using XmlDocFinder.Entities;
 
@@ -130,6 +134,13 @@ namespace XmlDocFinder
                 return path;
             }
 
+            // Tries to get xml documentation file path from
+            // a known nuget like directory
+            if (TryGetPathFromNugetCache(assembly, out path))
+            {
+                return path;
+            }
+            
             return string.Empty;
         }
 
@@ -188,6 +199,53 @@ namespace XmlDocFinder
             {
                 value = path;
                 return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Tries to get xml documentation path from a 
+        /// nuget like directory.
+        /// </summary>
+        /// <param name="assembly">Assembly for whom to get xml documentation file path</param>
+        /// <param name="value">Found path or null if no path was found</param>
+        /// <returns>Whether a path was found or not</returns>
+        private bool TryGetPathFromNugetCache(Assembly assembly, out string value)
+        {
+            Debug.Assert(assembly != null, "assembly != null");
+
+            value = string.Empty;
+
+            // Get assembly information
+            var assemblyName = assembly.GetName();
+            var name = assemblyName.Name;
+            var version = assemblyName.Version?.ToString(3);
+
+            // Skip if name or version is not defined
+            if (string.IsNullOrWhiteSpace(name)) { return false; }
+            if (string.IsNullOrWhiteSpace(version)) { return false; }
+
+            // Go through every known nuget like directory
+            foreach (var path in NugetLikeDirectories)
+            {
+                // Create possible xml documentation directory
+                var packagePath = _fileSystem.Path.Combine(path, name, version);
+
+                // Skip current nuget like directory if needed
+                // package directory doesn't exists
+                if (!_fileSystem.Directory.Exists(packagePath)) { continue; }
+
+                // Get last xml file in directory
+                var lastFile = _fileSystem.Directory
+                    .GetFiles(packagePath, $"{name}.xml", SearchOption.AllDirectories)
+                    .OrderBy(f => f)
+                    .LastOrDefault();
+                if (lastFile != string.Empty)
+                {
+                    value = lastFile;
+                    return true;
+                }
             }
 
             return false;

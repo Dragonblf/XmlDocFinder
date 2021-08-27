@@ -46,11 +46,14 @@ namespace XmlDocFinder
             _fileSystem = fileSystem;
         }
 
-        
+
+        /// <inheritdoc cref="IDocFinder.FindFor{T}"/>
         public string FindFor<T>() where T : notnull => FindFor(typeof(T).Assembly);
 
+        /// <inheritdoc cref="IDocFinder.TryFindFor{T}"/>
         public bool TryFindFor<T>(out string path) where T : notnull => TryFindFor(typeof(T).Assembly, out path);
 
+        /// <inheritdoc cref="IDocFinder.FindFor"/>
         public string FindFor(in Assembly assembly)
         {
             if (assembly == null) { throw new ArgumentNullException(nameof(assembly)); }
@@ -60,6 +63,7 @@ namespace XmlDocFinder
                 : string.Empty;
         }
 
+        /// <inheritdoc cref="IDocFinder.TryFindFor"/>
         public bool TryFindFor(in Assembly assembly, out string path)
         {
             if (assembly == null) { throw new ArgumentNullException(nameof(assembly)); }

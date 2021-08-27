@@ -1,10 +1,9 @@
-using XmlDocFinder;
 using System;
 using System.IO.Abstractions;
-using Xunit;
 using System.Reflection;
 using NSubstitute;
 using Shouldly;
+using Xunit;
 
 namespace XmlDocFinder.Tests
 {

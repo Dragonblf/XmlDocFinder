@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SimpleInjector;
+﻿using SimpleInjector;
 
-namespace Dragonblf.XmlDocFinder.DI
+namespace XmlDocFinder.DI
 {
     /// <summary>
     /// Provides simple dependency injection functionality.
@@ -32,7 +27,7 @@ namespace Dragonblf.XmlDocFinder.DI
 
 
         /// <summary>
-        /// Gets an instance of given type <see cref="T"/>.
+        /// Gets an instance of given type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">Interface to find</typeparam>
         /// <returns>Instance</returns>

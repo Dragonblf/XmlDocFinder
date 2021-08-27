@@ -3,13 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Abstractions;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Dragonblf.XmlDocFinder.DI;
+using XmlDocFinder.DI;
 
-namespace Dragonblf.XmlDocFinder
+namespace XmlDocFinder
 {
     /// <summary>
     /// Helper class to find paths to XML documentation files for assemblies.
@@ -26,7 +23,7 @@ namespace Dragonblf.XmlDocFinder
         /// <summary>
         /// Contains the file system wrapper to use.
         /// </summary>
-        private IFileSystem _fileSystem;
+        private readonly IFileSystem _fileSystem;
 
 
         /// <summary>
@@ -49,11 +46,14 @@ namespace Dragonblf.XmlDocFinder
             _fileSystem = fileSystem;
         }
 
-        
+
+        /// <inheritdoc cref="IDocFinder.FindFor{T}"/>
         public string FindFor<T>() where T : notnull => FindFor(typeof(T).Assembly);
 
+        /// <inheritdoc cref="IDocFinder.TryFindFor{T}"/>
         public bool TryFindFor<T>(out string path) where T : notnull => TryFindFor(typeof(T).Assembly, out path);
 
+        /// <inheritdoc cref="IDocFinder.FindFor"/>
         public string FindFor(in Assembly assembly)
         {
             if (assembly == null) { throw new ArgumentNullException(nameof(assembly)); }
@@ -63,6 +63,7 @@ namespace Dragonblf.XmlDocFinder
                 : string.Empty;
         }
 
+        /// <inheritdoc cref="IDocFinder.TryFindFor"/>
         public bool TryFindFor(in Assembly assembly, out string path)
         {
             if (assembly == null) { throw new ArgumentNullException(nameof(assembly)); }
@@ -83,7 +84,7 @@ namespace Dragonblf.XmlDocFinder
 
             // Save path into cache
             Cache[hash] = path;
-
+            
             return true;
         }
 

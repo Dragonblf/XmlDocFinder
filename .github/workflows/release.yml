@@ -76,6 +76,12 @@ jobs:
         path: ${{ github.workspace }}/artifacts
     - name: Determine version
       uses: battila7/get-version-action@v2
+    - name: Publish packages to Nuget
+      run: dotnet nuget push artifacts/**.nupkg --source nuget.org --api-key ${{secrets.NUGET_TOKEN}}
+    - name: Publish packages to GitHub 
+      run: |
+        dotnet nuget add source --username dragonblf --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/dragonblf/index.json"
+        dotnet nuget push artifacts/**.nupkg --source "github" --api-key ${{secrets.GITHUB_TOKEN}}
     - name: Create Github release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
@@ -86,5 +92,3 @@ jobs:
         files: |
           LICENSE
           artifacts/**.nupkg
-    - name: Publish packages to nuget
-      run: dotnet nuget push artifacts/**.nupkg --source nuget.org --api-key ${{secrets.NUGET_TOKEN}}

@@ -54,7 +54,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: artifacts
-        path: ${{ github.workspace }}/artifacts
+        path: ${{ github.workspace }}/artifacts/XmlDocFinder.${{ env.RELEASE_VERSION }}.nupkg
 
   publish:
     name: "🚀 Publish library"
@@ -66,25 +66,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.x'
-    - name: Determine release version
-      run: |
-        echo "RELEASE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-        echo "RELEASE_VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
     - uses: actions/download-artifact@v2
       with:
         name: artifacts
         path: ${{ github.workspace }}/artifacts
-    - name: Determine version
-      uses: battila7/get-version-action@v2
-    - name: Create Github release
-      uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        title: "Version ${{ env.RELEASE_VERSION }}"
-        automatic_release_tag: "${{ env.RELEASE_TAG }}"
-        prerelease: false
-        files: |
-          LICENSE
-          artifacts/**.nupkg
     - name: Publish packages to nuget
       run: dotnet nuget push artifacts/**.nupkg --source nuget.org --api-key ${{secrets.NUGET_TOKEN}}

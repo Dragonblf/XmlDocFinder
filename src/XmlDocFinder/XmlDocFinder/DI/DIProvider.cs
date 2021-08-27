@@ -27,7 +27,7 @@ namespace XmlDocFinder.DI
 
 
         /// <summary>
-        /// Gets an instance of given type <see cref="T"/>.
+        /// Gets an instance of given type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">Interface to find</typeparam>
         /// <returns>Instance</returns>

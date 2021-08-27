@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using NuGet.Configuration;
 
-namespace XmlDocFinder.Entities
+namespace XmlDocFinder.Provider
 {
     internal class NugetDirectoryPathsProvider : INugetDirectoryPathsProvider
     {

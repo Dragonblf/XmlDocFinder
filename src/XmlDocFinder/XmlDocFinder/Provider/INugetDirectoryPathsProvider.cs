@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.IO.Abstractions;
 
-namespace XmlDocFinder.Entities
+namespace XmlDocFinder.Provider
 {
     internal interface INugetDirectoryPathsProvider
     {

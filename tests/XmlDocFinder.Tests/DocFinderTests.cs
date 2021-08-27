@@ -1,4 +1,4 @@
-using Dragonblf.XmlDocFinder;
+using XmlDocFinder;
 using System;
 using System.IO.Abstractions;
 using Xunit;

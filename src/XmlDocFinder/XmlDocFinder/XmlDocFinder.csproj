@@ -15,7 +15,7 @@
 	<PackageProjectUrl>https://github.com/Dragonblf/XmlDocFinder</PackageProjectUrl>
 	<projectUrl>https://github.com/Dragonblf/XmlDocFinder</projectUrl>
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
-	<RootNamespace>Dragonblf.XmlDocFinder</RootNamespace>
+	<RootNamespace>XmlDocFinder</RootNamespace>
 	<PublishRepositoryUrl>true</PublishRepositoryUrl>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<IncludeSymbols>true</IncludeSymbols>

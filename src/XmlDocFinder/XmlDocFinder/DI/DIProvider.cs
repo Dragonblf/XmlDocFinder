@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SimpleInjector;
 
-namespace Dragonblf.XmlDocFinder.DI
+namespace XmlDocFinder.DI
 {
     /// <summary>
     /// Provides simple dependency injection functionality.

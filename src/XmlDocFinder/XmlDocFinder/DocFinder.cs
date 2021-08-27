@@ -7,9 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Dragonblf.XmlDocFinder.DI;
+using XmlDocFinder.DI;
 
-namespace Dragonblf.XmlDocFinder
+namespace XmlDocFinder
 {
     /// <summary>
     /// Helper class to find paths to XML documentation files for assemblies.
@@ -83,7 +83,7 @@ namespace Dragonblf.XmlDocFinder
 
             // Save path into cache
             Cache[hash] = path;
-
+            
             return true;
         }
 

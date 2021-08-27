@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dragonblf.XmlDocFinder
+namespace XmlDocFinder
 {
     /// <summary>
     /// Interface which defines helper methods to implement

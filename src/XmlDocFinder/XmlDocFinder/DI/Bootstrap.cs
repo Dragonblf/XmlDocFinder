@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SimpleInjector;
 
-namespace Dragonblf.XmlDocFinder.DI
+namespace XmlDocFinder.DI
 {
     /// <summary>
     /// Contains the dependency injection bootstrap for library.

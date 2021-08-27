@@ -158,9 +158,16 @@ namespace XmlDocFinder
             // Skip search if no location is given
             if (string.IsNullOrWhiteSpace(assembly.Location)) { return false; }
 
+            // Get assembly information
+            var assemblyName = assembly.GetName();
+            var name = assemblyName.Name;
+
+            // Skip if name is not defined
+            if (string.IsNullOrWhiteSpace(name)) { return false; }
+
             // Create possible xml documentation file path
             var directory = _fileSystem.Path.GetDirectoryName(assembly.Location);
-            var path = _fileSystem.Path.Combine(directory, $"{assembly.GetName().Name}.xml");
+            var path = _fileSystem.Path.Combine(directory, $"{name}.xml");
 
             if (_fileSystem.File.Exists(path))
             {
@@ -187,11 +194,18 @@ namespace XmlDocFinder
             // Skip search if no location is given
             if (string.IsNullOrWhiteSpace(assembly.CodeBase)) { return false; }
 
+            // Get assembly information
+            var assemblyName = assembly.GetName();
+            var name = assemblyName.Name;
+
+            // Skip if name is not defined
+            if (string.IsNullOrWhiteSpace(name)) { return false; }
+
             // Create possible xml documentation path
             var directory = _fileSystem.Path.GetDirectoryName(assembly.CodeBase)
                 .Replace("file:///", string.Empty)
                 .Replace("file:\\", string.Empty);
-            var path = _fileSystem.Path.Combine(directory, $"{assembly.GetName().Name}.xml");
+            var path = _fileSystem.Path.Combine(directory, $"{name}.xml");
 
             if (_fileSystem.File.Exists(path))
             {

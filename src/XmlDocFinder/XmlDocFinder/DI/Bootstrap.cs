@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions;
 using SimpleInjector;
+using XmlDocFinder.Entities;
 
 namespace XmlDocFinder.DI
 {
@@ -16,6 +17,7 @@ namespace XmlDocFinder.DI
         internal static Container Initialize(this Container container)
         {
             container.Register<IFileSystem, FileSystem>(Lifestyle.Singleton);
+            container.Register<INugetDirectoryPathsProvider, NugetDirectoryPathsProvider>(Lifestyle.Singleton);
             return container;
         }
     }

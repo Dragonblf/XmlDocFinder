@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO.Abstractions;
 using System.Reflection;
 using XmlDocFinder.DI;
+using XmlDocFinder.Entities;
 
 namespace XmlDocFinder
 {
@@ -17,14 +18,31 @@ namespace XmlDocFinder
         /// Contains previously found XML documentation
         /// paths for hashes of assembly full names.
         /// </summary>
-        private static readonly IDictionary<int, string> Cache =
-            new ConcurrentDictionary<int, string>();
+        private static readonly IDictionary<int, string> Cache;
+
+        /// <summary>
+        /// Contains every known path to directories with a
+        /// nuget like structure where nuget packages are
+        /// located in.
+        /// </summary>
+        private static readonly IReadOnlyCollection<string> NugetLikeDirectories;
 
         /// <summary>
         /// Contains the file system wrapper to use.
         /// </summary>
         private readonly IFileSystem _fileSystem;
 
+
+        /// <summary>
+        /// Initializes every static value in <see cref="DocFinder"/>.
+        /// </summary>
+        static DocFinder()
+        {
+            var nugetSettingsProvider = DIProvider.GetInstance<INugetDirectoryPathsProvider>();
+
+            Cache = new ConcurrentDictionary<int, string>();
+            NugetLikeDirectories = nugetSettingsProvider.GetNugetLikeDirectoryPaths();
+        }
 
         /// <summary>
         /// Initializes a new instance of <see cref="DocFinder"/>.
